@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
+    <HeaderComponent />
     <router-view/>
   </div>
 </template>
@@ -30,3 +27,13 @@ nav {
   }
 }
 </style>
+<script>
+// @ is an alias to /src
+import HeaderComponent from './components/shared/HeaderComponent.vue'
+
+export default {
+  components: {
+    HeaderComponent
+  }
+}
+</script>
