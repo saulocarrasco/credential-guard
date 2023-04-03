@@ -4,6 +4,9 @@
       <b-col md="10" offset-md="1">
         <b-table striped hover :select-mode="selectMode" responsive="sm" ref="permissionTable" selectable :items="items"
           @row-selected="onRowSelected" :fields="fields">
+          <template v-slot:cell(fullName)="data">
+            {{ data.item.employee.name }} {{ data.item.employee.lastName }}
+          </template>
           <template #cell(edit)="row">
             <b-button size="sm" @click="onEdit(row.item)" class="mr-1">
               Edit
@@ -21,6 +24,9 @@
 </template>
   
 <script>
+
+import PermissionService from '../services/PermissionService.vue';
+
 export default {
   data() {
     return {
@@ -32,16 +38,13 @@ export default {
           isActive: false
         },
         {
-          key: 'lastName',
+          key: 'fullName',
+          label: 'employee',
           sortable: true,
         },
         {
-          key: 'firstName',
-          sortable: false
-        },
-        {
-          key: 'permission',
-          label: 'Description',
+          key: 'permissionTypeId',
+          label: 'Tipo de Permiso',
           sortable: true,
         },
         {
@@ -57,16 +60,14 @@ export default {
           label: 'Option 2'
         }
       ],
-      items: [
-        { id: 1, permission: "Otro", permissionDate: new Date(), firstName: 'Dickerson', lastName: 'Macdonald' },
-      ],
+      items: [],
       selectMode: 'single',
       selected: null,
       infoModal: {
-          id: 'info-modal',
-          title: '',
-          content: ''
-        }
+        id: 'info-modal',
+        title: '',
+        content: ''
+      }
     }
   },
   methods: {
@@ -81,8 +82,17 @@ export default {
     },
     onRowSelected(items) {
       this.selected = items
-      console.log(items);
     },
+
+    populatePermissionTable() {
+      PermissionService.getList().then(response => {
+        console.log(response.data);
+        this.items = response.data.data;
+      });
+    }
+  },
+  mounted() {
+    this.populatePermissionTable();
   }
 }
 </script>
