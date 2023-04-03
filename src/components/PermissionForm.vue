@@ -44,7 +44,8 @@ export default {
         employeeName: '',
         employeelastName: '',
         permissionType: null,
-        permissionDate: null
+        permissionDate: null,
+        employeeId: 0
       },
       permissionTypes: null,//[{ text: 'Select One', value: null }, 'Diligencias', 'Otros'],
       show: true
@@ -66,14 +67,20 @@ export default {
       };
 
       if (id) {
+
+        permission.employee.id = this.form.employeeId;
+
         PermissionService.update(id, permission).then(response => {
-          console.log(response);
+          alert(response.data.messages[0]);
         });
+
       } else {
         PermissionService.add(permission).then(response => {
-          console.log(response);
+          alert(response.data.messages[0]);
         });
       }
+
+      this.$router.push(`/`);
     },
     onReset(event) {
       event.preventDefault()
@@ -93,6 +100,7 @@ export default {
       if (id) {
         PermissionService.get(id).then(response => {
           this.form.employeeName = response.data.data[0].employee.name;
+          this.form.employeeId = response.data.data[0].employee.id;
           this.form.employeelastName = response.data.data[0].employee.lastName;
           this.form.permissionType = response.data.data[0].permissionTypeId;
           this.form.permissionDate = response.data.data[0].permissionDate;

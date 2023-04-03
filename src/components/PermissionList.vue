@@ -20,9 +20,17 @@
         </b-table>
       </b-col>
     </b-row>
+    <div>
+      <b-modal ref="delete-modal" hide-footer v-model="modalShow">
+        <div class="d-block text-center">
+          <h6>Esta seguro de eliminar este permiso!</h6>
+        </div>
+        <b-button class="mt-3" variant="outline-danger" block @click="executeDelete">Confirmar</b-button>
+      </b-modal>
+    </div>
   </div>
 </template>
-  
+
 <script>
 
 import PermissionService from '../services/PermissionService.vue';
@@ -63,11 +71,8 @@ export default {
       items: [],
       selectMode: 'single',
       selected: null,
-      infoModal: {
-        id: 'info-modal',
-        title: '',
-        content: ''
-      }
+      modalShow: false,
+      currentPermissionId: 0
     }
   },
   methods: {
@@ -75,18 +80,21 @@ export default {
       this.$router.push(`/form/${item.id}`);
     },
     onDelete(item) {
-      console.log(item);
-      // this.infoModal.title = `Row index: ${index}`
-      //   this.infoModal.content = JSON.stringify(item, null, 2)
-      //   this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+      this.modalShow = !this.modalShow;
+      this.currentPermissionId = item.id;
     },
     onRowSelected(items) {
       this.selected = items
     },
-
+    executeDelete() {
+      PermissionService.delete(this.currentPermissionId).then(response => {
+        this.$refs['delete-modal'].hide();
+        alert(response.data.messages[0]);
+        this.populatePermissionTable();
+      });
+    },
     populatePermissionTable() {
       PermissionService.getList().then(response => {
-        console.log(response.data);
         this.items = response.data.data;
       });
     }

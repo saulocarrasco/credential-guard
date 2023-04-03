@@ -16,6 +16,9 @@ export default {
   },
   update(id, permission){
     return axios.put(`${CustomConstants.ApiPermission}/${id}`, permission);
+  },
+  delete(id){
+    return axios.delete(`${CustomConstants.ApiPermission}/${id}`);
   }
 };
 
