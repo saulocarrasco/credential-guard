@@ -71,16 +71,14 @@ export default {
         permission.employee.id = this.form.employeeId;
 
         PermissionService.update(id, permission).then(response => {
-          alert(response.data.messages[0]);
+          this.responseHandler(response);
         });
 
       } else {
         PermissionService.add(permission).then(response => {
-          alert(response.data.messages[0]);
+          this.responseHandler(response);
         });
       }
-
-      this.$router.push(`/`);
     },
     onReset(event) {
       event.preventDefault()
@@ -118,6 +116,10 @@ export default {
         ));
         this.permissionTypes.push({ text: 'Select One', value: null });
       });
+    },
+    responseHandler(response) {
+      alert(response.data.messages[0]);
+      this.$router.push(`/`);
     }
   },
   mounted() {
